@@ -2,7 +2,7 @@ import { Router } from "express";
 import { prisma }from "../../prisma/index.js"
 
 import { customAlphabet } from "nanoid";
-import ytVidId from "../utils/rgx"
+import ytVidId from "../utils/rgx.js"
 const todorouter=Router();
 const createRoomCode = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 6);
 
