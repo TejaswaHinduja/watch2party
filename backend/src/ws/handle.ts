@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { prisma }from "../../prisma/index"
+import { prisma }from "../../prisma/index.js"
 
 type Participant = {
     id: string;

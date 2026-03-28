@@ -1,6 +1,6 @@
 /*import jwt, { JwtPayload } from "jsonwebtoken"
 import { Response,Request,NextFunction } from "express"
-import { prisma }from "../../prisma/index"
+import { prisma }from "../../prisma/index.js"
 import { role } from "../../generated/prisma/enums"
 
 

@@ -1,5 +1,5 @@
 /*import { Router } from "express";
-import { prisma }from "../../prisma/index"
+import { prisma }from "../../prisma/index.js"
 import bcrypt from "bcrypt";
 import gentoken from "../middleware/jwt.js";
 import { AuthReq } from "../middleware/potect.js";
