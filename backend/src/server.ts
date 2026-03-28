@@ -24,6 +24,8 @@ app.use(cookieParser());
 
 app.use('/api',todorouter)
 
-httpserver.listen(4000,()=>{
-    console.log("server started")
+const PORT = Number(process.env.PORT ?? 4000)
+
+httpserver.listen(PORT,()=>{
+    console.log(`server started on ${PORT}`)
 })
