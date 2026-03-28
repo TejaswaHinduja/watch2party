@@ -10,14 +10,14 @@ const app=express();
 const httpserver=createServer(app)
 const io=new Server(httpserver,{
     cors:{
-        origin:"http://localhost:3000",
+        origin:["http://localhost:3000","https://watch2party-ten.vercel.app"],
         methods:["GET","POST"]
     }
 })
 SetSocket(io)
 app.use(express.json())
 app.use(cors({
-    origin:"http://localhost:3000",
+    origin:["http://localhost:3000","https://watch2party-ten.vercel.app"],
     credentials:true
 }))
 app.use(cookieParser());
