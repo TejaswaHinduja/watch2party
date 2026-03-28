@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken"
+/*import jwt, { JwtPayload } from "jsonwebtoken"
 import { Response,Request,NextFunction } from "express"
 import { prisma }from "../../prisma/index"
 import { role } from "../../generated/prisma/enums"
@@ -39,4 +39,4 @@ export async function protect(req:AuthReq,res:Response,next:NextFunction){
     }catch(error){
         return res.status(403).json({message:"token invalid"})
     }
-}
+}*/

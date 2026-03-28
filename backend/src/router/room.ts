@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { prisma }from "../../prisma/index"
 
-import { AuthReq } from "../middleware/potect.js";
 import { customAlphabet } from "nanoid";
 import ytVidId from "../utils/rgx"
 const todorouter=Router();
