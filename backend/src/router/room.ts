@@ -17,7 +17,7 @@ todorouter.get("/room/:code", async (req, res) => {
             where: {
                 code: {
                     equals: code,
-                    mode: "insensitive",
+                    
                 },
             },
             select: {
