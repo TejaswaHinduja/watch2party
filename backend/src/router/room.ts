@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { prisma }from "../../prisma/index.js"
+import { prisma }from "../index.js"
 
 import { customAlphabet } from "nanoid";
 import ytVidId from "../utils/rgx.js"
