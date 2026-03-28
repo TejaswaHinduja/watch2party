@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "npm install && npx prisma generate && tsc -b",
-    "start": "node dist/src/server.js"
+    "start": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
