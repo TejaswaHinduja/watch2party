@@ -87,14 +87,14 @@ export default function Landing(){
                     Watch together in real time.
                 </h1>
                 <p className="mt-4 max-w-xl text-stone-600 md:text-lg">
-                    Create a synchronized room, invite friends with a room code, and let the host manage playback for everyone.
+                    Create a room, invite friends with a room code, and let the host manage playback for everyone.
                 </p>
 
                 <div className="mt-8 grid gap-3 text-sm text-stone-700 sm:grid-cols-2">
                     <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">Host-only playback controls</div>
                     <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">Promote or kick participants</div>
                     <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">Room code based quick join</div>
-                    <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">YouTube iframe synchronization</div>
+                    <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">Synced YT videos</div>
                 </div>
             </section>
 
@@ -130,7 +130,7 @@ export default function Landing(){
                         <input
                             className="w-full rounded-xl border border-stone-300 px-3 py-2 outline-none transition focus:border-amber-600"
                             type="text"
-                            placeholder="Enter YouTube URL or video id"
+                            placeholder="Enter YouTube URL"
                             value={vidurl}
                             onChange={(e)=>{setVidurl(e.target.value)}}
                         />

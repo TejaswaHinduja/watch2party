@@ -210,6 +210,9 @@ export function SetSocket(io:Server){
                 removeParticipantFromRoom(roomCode, socket.id);
             }
         });
+        socket.on("change_video",(videoUrl,roomCode)=>{
+            
+        })
 
     })
 }

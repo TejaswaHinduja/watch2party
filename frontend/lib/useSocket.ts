@@ -16,7 +16,6 @@ type Participant = {
 
 export function useSocket(roomCode: string, username: string) {
   const socket = getSocket();
-
   const [participants,setParticipants]=useState<Participant[]>([]);
   const [videoState,setVideoState]= useState<VideoState | null>(null);
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
@@ -26,11 +25,11 @@ export function useSocket(roomCode: string, username: string) {
 
   useEffect(() => {
     if (!username || !roomCode || roomCode === "undefined") {
-      console.log("[useSocket] skip connect: missing roomCode/username", { roomCode, username });
+      console.log("not connected missing roomCode/username", { roomCode, username });
       return;
     }
 
-    console.log("[useSocket] setup", {
+    console.log("socketsetup", {
       roomCode,
       username,
       connected: socket.connected,
@@ -39,40 +38,40 @@ export function useSocket(roomCode: string, username: string) {
 
     const onConnect = () => {
       setSocketId(socket.id);
-      console.log("[socket] connected", { socketId: socket.id, roomCode, username });
+      console.log("socket connected", { socketId: socket.id, roomCode, username });
     };
 
     const onDisconnect = (reason: string) => {
       setSocketId(undefined);
-      console.log("[socket] disconnected", { reason, roomCode, username });
+      console.log("socket disconnected", { reason, roomCode, username });
     };
 
     const onSyncState = (state: VideoState) => {
-      console.log("[socket] sync_state", state);
+      console.log("socket sync_state", state);
       setVideoState(state);
     };
 
     const onUsersChanged = (payload: Participant[] | { users: Participant[] }) => {
-      console.log("[socket] user_joined raw payload", payload);
+      console.log("socket user_joined raw payload", payload);
       if (Array.isArray(payload)) {
-        console.log("[socket] user_joined normalized participants", payload);
+        console.log(" socket user_joined normalized participants", payload);
         setParticipants(payload);
         return;
       }
       const nextParticipants = payload.users ?? [];
-      console.log("[socket] user_joined normalized participants", nextParticipants);
+      console.log("socket user_joined normalized participants", nextParticipants);
       setParticipants(nextParticipants);
     };
 
     const onRoomError = (payload: { message?: string }) => {
       const message = payload?.message ?? "Unknown room error";
-      console.log("[socket] room_error", message);
+      console.log("socket room_error", message);
       setRoomError(message);
     };
 
     const onKicked = (payload: { message?: string }) => {
       const message = payload?.message ?? "You were removed from this room.";
-      console.log("[socket] kicked", message);
+      console.log("socket kicked", message);
       setKickedMessage(message);
       socket.disconnect();
     };
@@ -86,11 +85,11 @@ export function useSocket(roomCode: string, username: string) {
     socket.on("user_joined", onUsersChanged);
     socket.on("room_error", onRoomError);
     socket.on("kicked", onKicked);
-    console.log("[socket] emitting join_room", { roomCode, username });
+    console.log("socket emitting join_room", { roomCode, username });
     socket.emit("join_room", { roomCode, username });
 
     return ()=>{
-      console.log("[socket] cleanup", { roomCode, username, socketId: socket.id });
+      console.log("socket cleanup", { roomCode, username, socketId: socket.id });
       socket.emit("leave_room",{roomCode});
         socket.off("connect", onConnect)
         socket.off("disconnect", onDisconnect)
@@ -102,11 +101,11 @@ export function useSocket(roomCode: string, username: string) {
     }},[roomCode,username])
 
     useEffect(() => {
-      console.log("[useSocket] participants state updated", participants);
+      console.log("useSocket participants state updated", participants);
     }, [participants]);
 
     useEffect(() => {
-      console.log("[useSocket] videoState updated", videoState);
+      console.log("useSocket videoState updated", videoState);
     }, [videoState]);
 
     const play=()=>socket.emit("play");
