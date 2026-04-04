@@ -16,7 +16,7 @@ function toYouTubeVideoId(value: string | null | undefined): string | null {
 
 declare global {
   interface Window {
-    YT?: {
+    YT: {
       Player: new (
         elementId: string,
         config: {
@@ -58,9 +58,8 @@ type YouTubePlayerInstance = {
 export default function Room() {
   const params = useParams()
   const router = useRouter()
-  const roomParam = params.roomCode
-  const roomCode = Array.isArray(roomParam) ? roomParam[0] ?? '' : roomParam ?? ''
-
+  const roomCode = params.roomCode as string
+  
   const [username, setUsername] = useState(() => {
     if (typeof window === 'undefined') return ''
     return sessionStorage.getItem('username') ?? ''
@@ -69,17 +68,9 @@ export default function Room() {
   const [apiReady, setApiReady] = useState(false)
   const [playerReady, setPlayerReady] = useState(false)
 
-  const {
-    participants,
-    videoState,
-    isHost,
-    roomError,
-    kickedMessage,
-    play,
-    pause,
-    seek,
-    promoteParticipant,
-    kickParticipant,
+  const { participants,videoState,isHost,
+    roomError,kickedMessage,play,pause,seek,
+    promoteParticipant,kickParticipant,
   } = useSocket(roomCode, username)
   const videoId = toYouTubeVideoId(videoState?.videoId)
   const playerRef = useRef<YouTubePlayerInstance | null>(null)
