@@ -59,11 +59,12 @@ export default function Room() {
   const params = useParams()
   const router = useRouter()
   const roomCode = params.roomCode as string
-  
+
   const [username, setUsername] = useState(() => {
     if (typeof window === 'undefined') return ''
     return sessionStorage.getItem('username') ?? ''
   })
+
   const [inputName, setInputName] = useState('')
   const [apiReady, setApiReady] = useState(false)
   const [playerReady, setPlayerReady] = useState(false)
@@ -85,7 +86,7 @@ export default function Room() {
     seekRef.current = seek
   }, [play, pause, seek])
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("[RoomPage] state", {
       roomCode,
       username,
@@ -93,7 +94,7 @@ export default function Room() {
       participants,
       participantCount: participants.length,
     })
-  }, [roomCode, username, inputName, participants])
+  }, [roomCode, username, inputName, participants])*/
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -101,7 +102,6 @@ export default function Room() {
       setApiReady(true)
       return
     }
-
     const existingScript = document.getElementById("youtube-iframe-api")
     if (!existingScript) {
       const script = document.createElement("script")
@@ -109,10 +109,7 @@ export default function Room() {
       script.src = "https://www.youtube.com/iframe_api"
       document.body.appendChild(script)
     }
-
-    const prevReady = window.onYouTubeIframeAPIReady
-    window.onYouTubeIframeAPIReady = () => {
-      prevReady?.()
+    window.onYouTubeIframeAPIReady = () => { 
       setApiReady(true)
     }
   }, [])
