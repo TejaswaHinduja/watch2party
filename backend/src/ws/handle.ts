@@ -111,46 +111,48 @@ export function SetSocket(io:Server){
             removeParticipantFromRoom(resolvedRoomCode, socket.id);
         });
         socket.on("play",()=>{
-            const roomId=getSocketRoomCode(socket);
-            if(!roomId){
+            const roomCode=getSocketRoomCode(socket);
+            console.log(roomCode)
+            if(!roomCode){
                 return
             }
-            const room=rooms.get(roomId)
+
+            const room=rooms.get(roomCode)
             if(!room){
                 return
             }
             const user=room.participants.find(p=>p.id===socket.id);
             if(user?.role!=="HOST")return;
             room.videoState.playState="playing";
-            io.to(roomId).emit("sync_state",room.videoState)
+            io.to(roomCode).emit("sync_state",room.videoState)
         })
         socket.on("pause",()=>{
-            const roomId=getSocketRoomCode(socket);
-            if(!roomId){
+            const roomCode=getSocketRoomCode(socket);
+            if(!roomCode){
                 return
             }
-            const room=rooms.get(roomId)
+            const room=rooms.get(roomCode)
             if(!room){
                 return
             }
             const user=room.participants.find(p=>p.id===socket.id);
             if(user?.role!=="HOST")return;
             room.videoState.playState="paused";
-            io.to(roomId).emit("sync_state",room.videoState)
+            io.to(roomCode).emit("sync_state",room.videoState)
         })
         socket.on("seek",({time})=>{
-            const roomId=getSocketRoomCode(socket);
-            if(!roomId){
+            const roomCode=getSocketRoomCode(socket);
+            if(!roomCode){
                 return
             }
-            const room=rooms.get(roomId)
+            const room=rooms.get(roomCode)
             if(!room){
                 return
             }
             const user=room.participants.find(p=>p.id===socket.id);
             if(user?.role!=="HOST")return;
             room.videoState.currentTime=time;
-            io.to(roomId).emit("sync_state",room.videoState)
+            io.to(roomCode).emit("sync_state",room.videoState)
         })
         socket.on("promote_participant",({participantId})=>{
             const roomCode=getSocketRoomCode(socket);

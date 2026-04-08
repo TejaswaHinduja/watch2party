@@ -13,7 +13,6 @@ type Participant = {
   role: "HOST" | "PARTICIPANT";
 };
 
-
 export function useSocket(roomCode: string, username: string) {
   const socket = getSocket();
   const [participants,setParticipants]=useState<Participant[]>([]);
@@ -22,7 +21,6 @@ export function useSocket(roomCode: string, username: string) {
   const [roomError, setRoomError] = useState<string | null>(null);
   const [kickedMessage, setKickedMessage] = useState<string | null>(null);
   
-
   useEffect(() => {
     if (!username || !roomCode || roomCode === "undefined") {
       console.log("not connected missing roomCode/username", { roomCode, username });
@@ -53,14 +51,13 @@ export function useSocket(roomCode: string, username: string) {
 
     const onUsersChanged = (payload: Participant[] | { users: Participant[] }) => {
       console.log("socket user_joined raw payload", payload);
-      if (Array.isArray(payload)) {
-        console.log(" socket user_joined normalized participants", payload);
-        setParticipants(payload);
-        return;
+      let participants :Participant[];
+      if("users" in payload){
+        participants=payload.users??[];
+      }else{
+        participants=payload;
       }
-      const nextParticipants = payload.users ?? [];
-      console.log("socket user_joined normalized participants", nextParticipants);
-      setParticipants(nextParticipants);
+      setParticipants(participants);
     };
 
     const onRoomError = (payload: { message?: string }) => {
@@ -114,8 +111,8 @@ export function useSocket(roomCode: string, username: string) {
     const promoteParticipant=(participantId:string)=>socket.emit("promote_participant",{participantId});
     const kickParticipant=(participantId:string)=>socket.emit("kick_participant",{participantId});
 
-    const myParticipant = participants.find((p) => p.id === socketId);
-    const isHost = myParticipant?.role === "HOST";
+    const Participant = participants.find((p) => p.id === socketId);
+    const isHost = Participant?.role === "HOST";
 
     return  {
       videoState,

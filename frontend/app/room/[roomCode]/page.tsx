@@ -86,15 +86,6 @@ export default function Room() {
     seekRef.current = seek
   }, [play, pause, seek])
 
-  /*useEffect(() => {
-    console.log("[RoomPage] state", {
-      roomCode,
-      username,
-      inputName,
-      participants,
-      participantCount: participants.length,
-    })
-  }, [roomCode, username, inputName, participants])*/
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -138,7 +129,6 @@ export default function Room() {
           if (!isHost || suppressHostEmitRef.current || !playerRef.current || !window.YT?.PlayerState) {
             return
           }
-
           const currentTime = playerRef.current.getCurrentTime()
           if (event.data === window.YT.PlayerState.PLAYING) {
             seekRef.current(currentTime)
@@ -164,26 +154,24 @@ export default function Room() {
     if (!videoState || !playerRef.current || !playerReady) return
 
     const player = playerRef.current
-    if (typeof player?.getCurrentTime !== 'function') return
+    /*if (typeof player?.getCurrentTime !== 'function') return*/
 
     const current = player.getCurrentTime()
     const drift = Math.abs(current - videoState.currentTime)
     const shouldSeek = drift > 1
 
     suppressHostEmitRef.current = true
-    if (shouldSeek && typeof player?.seekTo === 'function') {
+    if (shouldSeek) {
       player.seekTo(videoState.currentTime, true)
     }
-    if (videoState.playState === "playing" && typeof player?.playVideo === 'function') {
+    if (videoState.playState === "playing") {
       player.playVideo()
-    } else if (typeof player?.pauseVideo === 'function') {
+    } else if (videoState.playState==="paused") {
       player.pauseVideo()
     }
-
     const timeout = window.setTimeout(() => {
       suppressHostEmitRef.current = false
     }, 200)
-
     return () => {
       window.clearTimeout(timeout)
     }
@@ -240,7 +228,7 @@ export default function Room() {
     return (
       <div className="min-h-screen grid place-items-center bg-[#f7f6f2] p-4">
         <h2>Invalid room link</h2>
-        <p>Room code is missing in the URL.</p>
+        <p>Room code is missing</p>
       </div>
     )
   }
