@@ -11,21 +11,21 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
 enum Role {
   PARTICIPANT
   HOST
 }
 
-
 model Room {
   id          String   @id @default(cuid())
   code        String   @unique
+  queue       String[]
   videoId     String?
   playState   String   @default("paused")
   currentTime Float    @default(0)
   createdAt   DateTime @default(now())
   expiresAt   DateTime?
-
   participants Participant[]
 }
 

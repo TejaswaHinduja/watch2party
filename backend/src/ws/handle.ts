@@ -10,6 +10,7 @@ type Participant = {
 type RoomState = {
     participants: Participant[];
     videoState: {
+        queue: (string|null)[];
         videoId: string | null;
         playState: string;
         currentTime: number;
@@ -62,10 +63,8 @@ export function SetSocket(io:Server){
             if (!requestedRoomCode) {
                 return socket.emit("room_error",{message:"Room code is required"})
             }
-
             const inMemoryRoomCode = findInMemoryRoomCode(requestedRoomCode);
             const resolvedRoomCode = inMemoryRoomCode ?? requestedRoomCode;
-
             let room=rooms.get(resolvedRoomCode);
             let joinedRoomCode = resolvedRoomCode;
             if(!room){
@@ -84,10 +83,14 @@ export function SetSocket(io:Server){
                 room={
                 participants:[],
                 videoState:{
+                    queue:[checkDb.videoId],
                     videoId:checkDb.videoId,
                     playState:checkDb.playState,
                     currentTime:checkDb.currentTime
                 },
+            }
+            if(!room){
+                return
             }
             rooms.set(joinedRoomCode,room)
             }
@@ -116,7 +119,6 @@ export function SetSocket(io:Server){
             if(!roomCode){
                 return
             }
-
             const room=rooms.get(roomCode)
             if(!room){
                 return
@@ -212,8 +214,40 @@ export function SetSocket(io:Server){
                 removeParticipantFromRoom(roomCode, socket.id);
             }
         });
-        socket.on("change_video",(videoUrl,roomCode)=>{
-            
+        socket.on("add_to_queue",(videoUrl:string)=>{
+            if(!videoUrl){
+                return
+            }
+            const roomCode=getSocketRoomCode(socket)
+            if(!roomCode){
+                return
+            }
+            const room=rooms.get(roomCode)
+            if(!room){
+                return
+            }
+            const user=room.participants.find((p=>p.id===socket.id))
+            if(user?.role!=="HOST"){
+                return
+            }
+            room.videoState.queue.push(videoUrl)
+            io.to(roomCode).emit("add_to_queue",room.videoState)
+        })
+        socket.on("change_video",(videoId)=>{
+            const roomCode=getSocketRoomCode(socket)
+            if(!roomCode){
+                return
+            }
+            const room=rooms.get(roomCode)
+            if(!room){
+                return
+            }
+            const user=room.participants.find((p=>p.id===socket.id))
+            if(user?.role!=="HOST"){
+                return
+            }
+            room.videoState.videoId=videoId
+            io.to(roomCode).emit("change_video",room.videoState)
         })
 
     })

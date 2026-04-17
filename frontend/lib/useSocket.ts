@@ -26,14 +26,6 @@ export function useSocket(roomCode: string, username: string) {
       console.log("not connected missing roomCode/username", { roomCode, username });
       return;
     }
-
-    console.log("socketsetup", {
-      roomCode,
-      username,
-      connected: socket.connected,
-      socketId: socket.id,
-    });
-
     const onConnect = () => {
       setSocketId(socket.id);
       console.log("socket connected", { socketId: socket.id, roomCode, username });
@@ -72,6 +64,9 @@ export function useSocket(roomCode: string, username: string) {
       setKickedMessage(message);
       socket.disconnect();
     };
+    const onChangeVideo=()=>{
+      
+    }
 
     setRoomError(null);
     setKickedMessage(null);
@@ -106,6 +101,7 @@ export function useSocket(roomCode: string, username: string) {
     }, [videoState]);
 
     const play=()=>socket.emit("play");
+    const changevideo=()=>socket.emit("change_video")
     const pause=()=>socket.emit("pause");
     const seek=(time:number)=>socket.emit("seek",{time});
     const promoteParticipant=(participantId:string)=>socket.emit("promote_participant",{participantId});
