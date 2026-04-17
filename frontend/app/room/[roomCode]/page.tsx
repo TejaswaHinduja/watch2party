@@ -68,7 +68,7 @@ export default function Room() {
   const [inputName, setInputName] = useState('')
   const [apiReady, setApiReady] = useState(false)
   const [playerReady, setPlayerReady] = useState(false)
-
+  const [newvid,setNewVid]=useState('');
   const { participants,videoState,isHost,
     roomError,kickedMessage,play,pause,seek,
     promoteParticipant,kickParticipant,
@@ -112,7 +112,6 @@ export default function Room() {
       playerRef.current.destroy()
       playerRef.current = null
     }
-
     setPlayerReady(false)
     playerRef.current = new window.YT.Player("room-youtube-player", {
       videoId,
@@ -254,9 +253,12 @@ export default function Room() {
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px]">
           <section className="rounded-2xl border border-stone-300 bg-black p-2 shadow-md">
+            
             {videoId ? (
+              <>
               <div className="relative aspect-video w-full overflow-hidden rounded-xl">
                 <div id="room-youtube-player" className="h-full w-full" />
+                
                 {!isHost && (
                   <div
                     className="absolute inset-0 cursor-not-allowed bg-transparent"
@@ -265,10 +267,13 @@ export default function Room() {
                   />
                 )}
               </div>
+              
+              </>
             ) : (
               <div className="grid aspect-video place-items-center rounded-xl bg-stone-900 text-stone-300">
                 No valid video is set for this room yet.
               </div>
+
             )}
           </section>
 
@@ -291,6 +296,7 @@ export default function Room() {
                     <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${p.role === "HOST" ? "bg-amber-100 text-amber-800" : "bg-stone-200 text-stone-700"}`}>
                       {p.role}
                     </span>
+                    
                   </div>
 
                   {isHost && p.role !== "HOST" && (
