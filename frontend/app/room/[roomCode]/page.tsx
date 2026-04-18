@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useSocket } from "@/lib/useSocket"
 import { useParams, useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 function toYouTubeVideoId(value: string | null | undefined): string | null {
   if (!value) return null
@@ -71,7 +72,7 @@ export default function Room() {
   const [newvid,setNewVid]=useState('');
   const { participants,videoState,isHost,
     roomError,kickedMessage,play,pause,seek,
-    promoteParticipant,kickParticipant,
+    promoteParticipant,kickParticipant,addToQueue,changevideo
   } = useSocket(roomCode, username)
   const videoId = toYouTubeVideoId(videoState?.videoId)
   const playerRef = useRef<YouTubePlayerInstance | null>(null)
@@ -153,7 +154,7 @@ export default function Room() {
     if (!videoState || !playerRef.current || !playerReady) return
 
     const player = playerRef.current
-    /*if (typeof player?.getCurrentTime !== 'function') return*/
+    if (typeof player?.getCurrentTime !== 'function') return
 
     const current = player.getCurrentTime()
     const drift = Math.abs(current - videoState.currentTime)
@@ -255,10 +256,8 @@ export default function Room() {
           <section className="rounded-2xl border border-stone-300 bg-black p-2 shadow-md">
             
             {videoId ? (
-              <>
               <div className="relative aspect-video w-full overflow-hidden rounded-xl">
                 <div id="room-youtube-player" className="h-full w-full" />
-                
                 {!isHost && (
                   <div
                     className="absolute inset-0 cursor-not-allowed bg-transparent"
@@ -267,15 +266,58 @@ export default function Room() {
                   />
                 )}
               </div>
-              
-              </>
             ) : (
               <div className="grid aspect-video place-items-center rounded-xl bg-stone-900 text-stone-300">
                 No valid video is set for this room yet.
               </div>
+            )}
 
+            {isHost && (
+              <div className="mt-2 flex gap-2 p-1">
+                <input
+                  type="text"
+                  value={newvid}
+                  placeholder="Paste YouTube URL..."
+                  className="flex-1 rounded-lg border border-stone-600 bg-stone-800 px-3 py-2 text-sm text-stone-100 placeholder:text-stone-500 outline-none focus:border-amber-500"
+                  onChange={(e) => setNewVid(e.target.value)}
+                />
+                <Button
+                  onClick={() => {
+                    const id = toYouTubeVideoId(newvid)
+                    if (id) {
+                      addToQueue(id)
+                      setNewVid('')
+                    }
+                  }}
+                  className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+                >
+                  Add to Queue
+                </Button>
+              </div>
+            )}
+
+            {(videoState?.queue ?? []).filter(id => id !== videoState?.videoId).length > 0 && (
+              <div className="mt-2 rounded-xl bg-stone-900 p-3">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">Up Next</h3>
+                <div className="space-y-1">
+                  {videoState!.queue.filter(id => id !== videoState!.videoId).map((id, i) => (
+                    <div key={i} className="flex items-center justify-between gap-2 rounded-lg bg-stone-800 px-3 py-2">
+                      <span className="truncate text-sm text-stone-200 font-mono">{id}</span>
+                      {isHost && (
+                        <button
+                          onClick={() => changevideo(id)}
+                          className="shrink-0 rounded-md bg-amber-600 px-2 py-1 text-xs font-medium text-white hover:bg-amber-700"
+                        >
+                          Play
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </section>
+          
 
           <aside className="rounded-2xl border border-stone-300 bg-white p-4 shadow-md">
             <div className="mb-3 flex items-center justify-between">

@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { getSocket } from '../lib/socket';
 
 export type VideoState = {
-  queue:(string|null)[];
+  queue:string[];
   videoId:string | null;
   playState:'playing' | 'paused';
-  currentTime: number;
+  currentTime: number;  
 };
 type Participant = {
   id: string;
@@ -66,10 +66,6 @@ export function useSocket(roomCode: string, username: string) {
       setKickedMessage(message);
       socket.disconnect();
     };
-    const onChangeVideo=()=>{
-
-    }
-
     setRoomError(null);
     setKickedMessage(null);
     socket.connect();
@@ -103,7 +99,8 @@ export function useSocket(roomCode: string, username: string) {
     }, [videoState]);
 
     const play=()=>socket.emit("play");
-    const changevideo=()=>socket.emit("change_video")
+    const changevideo=(videoId:string)=>socket.emit("change_video",{videoId})
+    const addToQueue=(videoId:string)=>socket.emit("add_to_queue",{videoId});
     const pause=()=>socket.emit("pause");
     const seek=(time:number)=>socket.emit("seek",{time});
     const promoteParticipant=(participantId:string)=>socket.emit("promote_participant",{participantId});
@@ -119,6 +116,7 @@ export function useSocket(roomCode: string, username: string) {
       roomError,
       kickedMessage,
       changevideo,
+      addToQueue,
       play,
       pause,
       seek,

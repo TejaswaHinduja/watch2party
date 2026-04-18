@@ -10,7 +10,7 @@ type Participant = {
 type RoomState = {
     participants: Participant[];
     videoState: {
-        queue: (string|null)[];
+        queue: string[];
         videoId: string | null;
         playState: string;
         currentTime: number;
@@ -83,14 +83,11 @@ export function SetSocket(io:Server){
                 room={
                 participants:[],
                 videoState:{
-                    queue:[checkDb.videoId],
+                    queue: checkDb.videoId ? [checkDb.videoId] : [],
                     videoId:checkDb.videoId,
                     playState:checkDb.playState,
                     currentTime:checkDb.currentTime
                 },
-            }
-            if(!room){
-                return
             }
             rooms.set(joinedRoomCode,room)
             }
@@ -214,8 +211,8 @@ export function SetSocket(io:Server){
                 removeParticipantFromRoom(roomCode, socket.id);
             }
         });
-        socket.on("add_to_queue",(videoUrl:string)=>{
-            if(!videoUrl){
+        socket.on("add_to_queue",({videoId}:{videoId:string})=>{
+            if(!videoId){
                 return
             }
             const roomCode=getSocketRoomCode(socket)
@@ -230,10 +227,10 @@ export function SetSocket(io:Server){
             if(user?.role!=="HOST"){
                 return
             }
-            room.videoState.queue.push(videoUrl)
-            io.to(roomCode).emit("add_to_queue",room.videoState)
+            room.videoState.queue.push(videoId)
+            io.to(roomCode).emit("sync_state",room.videoState)
         })
-        socket.on("change_video",(videoId)=>{
+        socket.on("change_video",({videoId}:{videoId:string})=>{
             const roomCode=getSocketRoomCode(socket)
             if(!roomCode){
                 return
@@ -247,7 +244,8 @@ export function SetSocket(io:Server){
                 return
             }
             room.videoState.videoId=videoId
-            io.to(roomCode).emit("change_video",room.videoState)
+            room.videoState.currentTime=0
+            io.to(roomCode).emit("sync_state",room.videoState)
         })
 
     })
