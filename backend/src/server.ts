@@ -10,7 +10,7 @@ const app=express();
 const httpserver=createServer(app)
 const io=new Server(httpserver,{
     cors:{
-        origin:["http://localhost:3000","https://watch2party-ten.vercel.app"],
+        origin:["http://localhost:3000","https://watch2party-ten.vercel.app","https://watchparty.tejaswahinduja.me/"],
         methods:["GET","POST"]
     }
 })
