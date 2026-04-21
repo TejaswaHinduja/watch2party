@@ -17,7 +17,7 @@ const io=new Server(httpserver,{
 SetSocket(io)
 app.use(express.json())
 app.use(cors({
-    origin:["http://localhost:3000","https://watch2party-ten.vercel.app"],
+    origin:["http://localhost:3000","https://watch2party-ten.vercel.app","https://watchparty.tejaswahinduja.me"],
     credentials:true
 }))
 app.use(cookieParser());
