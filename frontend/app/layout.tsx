@@ -15,6 +15,28 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Watch Party",
   description: "Watch Youtube Videos with your friends",
+  openGraph: {
+    title: "Watch2Party",
+    description: "Enjoy Youtube Videos With Your Friends",
+    url: "https://watchparty.tejaswahinduja.me",
+    siteName: "WatchParty",
+    images: [
+      {
+        url: "/watchpartyOG.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "WatchParty",
+    description: "Watch Youtube Videos together with your friends",
+    images: ["/watchpartyOG.png"],
+  },
 };
 
 export default function RootLayout({
