@@ -81,7 +81,7 @@ export default function Landing(){
         <div className="relative mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[1.2fr_1fr]">
             <section className="rounded-3xl border border-stone-300 bg-white/95 p-7 shadow-xl md:p-10">
                 <p className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-semibold tracking-wide text-amber-800">
-                    GROUP WATCH
+                    WATCH 2 PARTY
                 </p>
                 <h1 className="mt-4 text-4xl font-semibold leading-tight text-stone-900 md:text-5xl">
                     Watch together in real time.
