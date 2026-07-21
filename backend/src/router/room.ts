@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { prisma }from "../index.js"
-
 import { customAlphabet } from "nanoid";
 import ytVidId from "../utils/rgx.js"
 const todorouter=Router();
@@ -8,17 +7,14 @@ const createRoomCode = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 6);
 
 todorouter.get("/room/:code", async (req, res) => {
         try {
-        const code = String(req.params.code ?? "").trim();
+        const code = req.params.code.trim().toUpperCase();
         if (!code) {
             return res.status(400).json({ message: "Room code is required" });
         }
 
-        const room = await prisma.room.findFirst({
+        const room = await prisma.room.findUnique({
             where: {
-                code: {
-                    equals: code,
-                    mode: "insensitive",
-                },
+                code:code
             },
             select: {
                 code: true,
