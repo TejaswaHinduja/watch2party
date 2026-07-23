@@ -23,8 +23,8 @@ export function SetSocket(io:Server){
     const normalizeRoomCode = (value: unknown) => String(value ?? "").trim();
 
     const findInMemoryRoomCode = (roomCode: string) => {
-        const normalized = roomCode.toLowerCase();
-        return [...rooms.keys()].find((existingCode) => existingCode.toLowerCase() === normalized);
+        const normalized = roomCode.toUpperCase();
+        return [...rooms.keys()].find((existingCode) => existingCode.toUpperCase() === normalized);
     };
 
     const getSocketRoomCode = (socket: Socket) => {
