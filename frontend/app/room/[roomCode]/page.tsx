@@ -369,3 +369,5 @@ export default function Room() {
     </div>
   )
 }
+//check for hydration error
+//nhi samjh aaye toh fir ssr false 
