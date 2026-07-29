@@ -6,9 +6,12 @@ type Participant = {
     username: string;
     role: "HOST" | "PARTICIPANT";
 };
-
+type Chat={
+    text:string
+}
 type RoomState = {
     participants: Participant[];
+    messages:Chat[];
     videoState: {
         queue: string[];
         videoId: string | null;
@@ -34,6 +37,7 @@ export function SetSocket(io:Server){
     const emitParticipants = (roomCode: string, room: RoomState) => {
         io.to(roomCode).emit("user_joined", room.participants);
     };
+    
 
     const removeParticipantFromRoom = (roomCode: string, socketId: string) => {
         const room = rooms.get(roomCode);
